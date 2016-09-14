@@ -1,0 +1,9 @@
+{
+  "name": "uiGridSingleFilter",
+  "version": "0.0.1",
+  "license": "MIT",
+  "main": "./ui-grid-single-filter.js",
+  "ignore": [],
+  "dependencies": {
+  }
+}
