@@ -4,5 +4,7 @@
 
 Para utilizar el uiGridSingleFilter en tu proyecto:
 1. bower install http://git.crcit.es/rvalero/uiGridSingleFilter.git
-2. Crear un elemento input en el html con la directiva tal que así: <input type="text" ui-grid-single-filter-value class="form-control"/>
-3. Añadir también la directiva al grid: <div id="grid" ui-grid="vm.gridOptions" class="grid" ui-grid-single-filter></div>
+2. Poner directiva ui-grid-single-filter en los ui-grid
+3. Poner directiva ui-grid-single-filter-value en el buscador
+
+¡NO OLVIDAR! -> Descomentar el módulo en el index
