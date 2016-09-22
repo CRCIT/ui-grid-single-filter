@@ -1,3 +1,5 @@
-# Plugin module for quick filter with a single filter for ui-grid
 
-## Description
+# "UI-Grid Single Filter"
+
+Fast client filter for all properties in a single input.
+

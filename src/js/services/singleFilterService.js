@@ -1,30 +1,40 @@
 /**
- * Created by rvalero on 12/09/16.
+ * Created by rvalero on 13/09/16.
+ */
+/**
+ * Created by rvalero on 13/09/16.
  */
 (function () {
   'use strict';
 
-  angular.module('ui.grid.single.filter',[])
+  angular.module('ui.grid.single.filter')
 
-  angular
-    .module('ui.grid.single.filter')
-    .factory('uiGridFilterValueService', function() {
-
-      var filterValue = null;
-      var grid = null;
-
-      return {
-        filterValue:filterValue,
-        grid:grid
-      }
-
-    })
+  /**
+   * @ngdoc factory
+   * @name ui
+   */
     .service('uiGridSingleFilterService',['uiGridFilterValueService', function(uiGridFilterValueService) {
       //service body
 
       return {
-        singleFilter:singleFilter
+        singleFilter:singleFilter,
+        getPropertyWithName:getPropertyWithName
       };
+
+
+      function getPropertyWithName(entity,propertyName) {
+
+        if(propertyName.indexOf('.') < 0 ) return entity[propertyName];
+
+        var property = entity;
+        var arrayOfLevels = propertyName.split('.');
+        for( var i=0; i < arrayOfLevels.length ; i++ ) {
+          property = property[arrayOfLevels[i]];
+        }
+
+        return property;
+
+      }
 
       function singleFilter( renderableRows ) {
         if (!uiGridFilterValueService.filterValue) {
@@ -52,8 +62,8 @@
 
           if(columnDefs.length > 0) {
             for(var i=0; i < columnDefs.length; i++) {
-              if(columnDefs[i].field && row.entity[columnDefs[i].field] ){
-                concatedProperties = concatedProperties.concat(row.entity[columnDefs[i].field]);
+              if(columnDefs[i].field && getPropertyWithName( row.entity,columnDefs[i].field) ){
+                concatedProperties = concatedProperties.concat( getPropertyWithName(row.entity,columnDefs[i].field) );
               }
             }
           } else {
@@ -95,39 +105,6 @@
           }
         }
       }
-    }])
-  .directive('uiGridSingleFilter', ['uiGridSingleFilterService','uiGridFilterValueService',
-    function (uiGridSingleFilterService, uiGridFilterValueService) {
-      return {
-        restrict:'A',
-        replace: true,
-        priority: 10,
-        require: '^uiGrid',
-        scope: false,
-        compile: function () {
-          return {
-            pre: function ($scope, $elm, $attrs, uiGridCtrl) {
-              uiGridCtrl.grid.registerRowsProcessor( uiGridSingleFilterService.singleFilter, 200 );
-              uiGridFilterValueService.grid = uiGridCtrl.grid;
-            }
-          };
-        }
-      };
-    }])
-    .directive('uiGridSingleFilterValue', ['uiGridFilterValueService',
-      function (uiGridFilterValueService) {
-        return {
-          restrict: 'A',
-          scope:false,
-          link: function (scope, element, attrs) {
-            element.bind("keyup", function (event) {
-              uiGridFilterValueService.filterValue = attrs.$$element.val();
-              uiGridFilterValueService.grid.refresh();
-              event.preventDefault();
-            });
-          }
-        };
-      }])
+    }]);
 
 })();
-
