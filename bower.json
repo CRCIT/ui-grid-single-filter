@@ -5,11 +5,6 @@
     "ui-grid",
     "plugin"
   ],
-  "main":["src/plugin.module.js",
-    "src/directives/singleFilter.js",
-    "src/directives/singleFilterValue.js",
-    "src/services/filterValueService.js",
-    "src/services/singleFilterService.js"],
   "ignore": [
     "**/.*",
     "node_modules",
