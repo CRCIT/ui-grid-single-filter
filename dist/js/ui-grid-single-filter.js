@@ -3,7 +3,7 @@
  * null
  * @license undefined
  * vundefined
- * 2016-09-23T08:30:54.857Z
+ * 2016-09-23T11:00:31.275Z
  */
 (function () {
   'use strict';
@@ -129,11 +129,15 @@
 
       function getPropertyWithName(entity,propertyName) {
 
+        if(!propertyName) return '';
+
         if(propertyName.indexOf('.') < 0 ) return entity[propertyName];
 
         var property = entity;
         var arrayOfLevels = propertyName.split('.');
+
         for( var i=0; i < arrayOfLevels.length ; i++ ) {
+          if(!property) return '';
           property = property[arrayOfLevels[i]];
         }
 
