@@ -24,11 +24,15 @@
 
       function getPropertyWithName(entity,propertyName) {
 
+        if(!propertyName) return '';
+
         if(propertyName.indexOf('.') < 0 ) return entity[propertyName];
 
         var property = entity;
         var arrayOfLevels = propertyName.split('.');
+
         for( var i=0; i < arrayOfLevels.length ; i++ ) {
+          if(!property) return '';
           property = property[arrayOfLevels[i]];
         }
 
