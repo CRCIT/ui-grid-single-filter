@@ -124,6 +124,7 @@ gulp.task('js',  function () {
     // Re-order files so templates come last.
     //   They will fail to find the module if they're first
     .pipe($g.order([
+      'src/js/plugin.module.js',
       'src/js/**/*.js',
       'src/template/**/*.js'
     ], { base: '.' }))

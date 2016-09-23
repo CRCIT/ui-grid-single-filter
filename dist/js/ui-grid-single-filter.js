@@ -3,8 +3,20 @@
  * null
  * @license undefined
  * vundefined
- * 2016-09-23T07:53:18.147Z
+ * 2016-09-23T08:30:54.857Z
  */
+(function () {
+  'use strict';
+
+  /**
+   * @ngdoc module
+   * @name ui.grid.single.filter
+   * @description Main plugin module
+   */
+  angular.module('ui.grid.single.filter', ['ui.grid']);
+
+})();
+
 /**
  * Created by rvalero on 13/09/16.
  */
@@ -64,18 +76,6 @@
           }
         };
       }]);
-
-})();
-
-(function () {
-  'use strict';
-
-  /**
-   * @ngdoc module
-   * @name ui.grid.single.filter
-   * @description Main plugin module
-   */
-  angular.module('ui.grid.single.filter', ['ui.grid']);
 
 })();
 
