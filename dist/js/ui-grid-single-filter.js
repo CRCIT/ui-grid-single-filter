@@ -3,7 +3,7 @@
  * null
  * @license undefined
  * vundefined
- * 2016-09-23T11:00:31.275Z
+ * 2016-09-26T08:32:27.967Z
  */
 (function () {
   'use strict';
@@ -113,28 +113,27 @@
   'use strict';
 
   angular.module('ui.grid.single.filter')
-
-  /**
-   * @ngdoc factory
-   * @name ui
-   */
     .service('uiGridSingleFilterService',['uiGridFilterValueService', function(uiGridFilterValueService) {
       //service body
 
       return {
         singleFilter:singleFilter,
-        getPropertyWithName:getPropertyWithName
+        getPropertyWithColumnDef:getPropertyWithColumnDef
       };
 
 
-      function getPropertyWithName(entity,propertyName) {
+      function getPropertyWithColumnDef(entity,columnDef) {
+        if(!columnDef) return '';
+        var field =  columnDef.filterField || columnDef.field;
 
-        if(!propertyName) return '';
+        if(_isFunction(field)) {
+          return field(entity);
+        }
 
-        if(propertyName.indexOf('.') < 0 ) return entity[propertyName];
+        if(field.indexOf('.') < 0 ) return entity[field];
 
         var property = entity;
-        var arrayOfLevels = propertyName.split('.');
+        var arrayOfLevels = field.split('.');
 
         for( var i=0; i < arrayOfLevels.length ; i++ ) {
           if(!property) return '';
@@ -143,6 +142,10 @@
 
         return property;
 
+        function _isFunction(functionToCheck) {
+          var getType = {};
+          return functionToCheck && getType.toString.call(functionToCheck) === '[object Function]';
+        }
       }
 
       function singleFilter( renderableRows ) {
@@ -171,8 +174,8 @@
 
           if(columnDefs.length > 0) {
             for(var i=0; i < columnDefs.length; i++) {
-              if(columnDefs[i].field && getPropertyWithName( row.entity,columnDefs[i].field) ){
-                concatedProperties = concatedProperties.concat( getPropertyWithName(row.entity,columnDefs[i].field) );
+              if(columnDefs[i].field && getPropertyWithColumnDef( row.entity,columnDefs[i]) ){
+                concatedProperties = concatedProperties.concat( getPropertyWithColumnDef(row.entity,columnDefs[i]) );
               }
             }
           } else {
@@ -215,5 +218,10 @@
         }
       }
     }]);
+
+  /**
+   * @ngdoc factory
+   * @name ui
+   */
 
 })();
