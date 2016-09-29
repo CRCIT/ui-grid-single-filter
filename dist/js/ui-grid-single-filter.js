@@ -3,7 +3,7 @@
  * null
  * @license undefined
  * vundefined
- * 2016-09-26T08:32:27.967Z
+ * 2016-09-29T10:37:31.617Z
  */
 (function () {
   'use strict';
@@ -68,6 +68,7 @@
           restrict: 'A',
           scope:false,
           link: function (scope, element, attrs) {
+            uiGridFilterValueService.filterValue = null;
             element.bind("keyup", function (event) {
               uiGridFilterValueService.filterValue = attrs.$$element.val();
               uiGridFilterValueService.grid.refresh();

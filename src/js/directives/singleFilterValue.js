@@ -16,6 +16,7 @@
           restrict: 'A',
           scope:false,
           link: function (scope, element, attrs) {
+            uiGridFilterValueService.filterValue = null;
             element.bind("keyup", function (event) {
               uiGridFilterValueService.filterValue = attrs.$$element.val();
               uiGridFilterValueService.grid.refresh();

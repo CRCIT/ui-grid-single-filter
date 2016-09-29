@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Plugin SingleFilterService', function () {
+describe('SingleFilterService', function () {
   var SingleFilterService, row;
 
   beforeEach(module('ui.grid.single.filter'));
