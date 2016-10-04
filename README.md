@@ -1,16 +1,15 @@
-
 # "UI-Grid Single Filter"
+[![License](http://img.shields.io/:license-apache-brightgreen.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 
 Fast client filter for all properties in a single input.
 
 ## Description
 
-Para utilizar el uiGridSingleFilter en tu proyecto:
-1. bower install http://git.crcit.es/rvalero/uiGridSingleFilter.git
-2. Poner directiva ui-grid-single-filter en los ui-grid
-3. Poner directiva ui-grid-single-filter-value en el buscador
-
-¡NO OLVIDAR! -> Descomentar el módulo en el index
+Para utilizar ui-grid-single-filter en tu proyecto:
+* bower install https://github.com/CRCIT/ui-grid-single-filter.git
+* Incluir el modulo
+* Poner directiva ui-grid-single-filter en los ui-grid
+* Poner directiva ui-grid-single-filter-value en el buscador
 
 ## License
 
