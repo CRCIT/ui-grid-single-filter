@@ -1,58 +1,50 @@
 'use strict';
 
 describe('SingleFilterService', function () {
-  var ele, scope;
+  var ele, scope, compile;
 
   beforeEach(module('ui.grid.single.filter'));
-  beforeEach(inject(function (_uiGridSingleFilterService_) {
-    ele = _uiGridSingleFilterService_;
+  beforeEach(inject(function ($rootScope, $compile) {
+    scope = $rootScope.$new();
+    ele = angular.element(
+      '<input type="text" ui-grid-single-filter-value/>' +
+      '<div id="grid" ui-grid-bootstrap-styles ui-grid="gridOptions" class="grid" ui-grid-single-filter></div>'
+    );
+    scope.gridOptions = getGridOptions();
 
-    scope = { propNivel1:'p1', nivel2:{ propNivel2:'p2'}, nivel3:{ nivel2:{ propNivel3:'p3'}} };
+    $compile(ele)(scope);
+    scope.$digest();
   }));
 
 
-  // beforeEach(inject(function () {
-  //
-  //   scope = $rootScope.$new();
-  //   ele = angular.element(
-  //     '<input type="text" ui-grid-single-filter-value/>' +
-  //     '<div id="grid" ui-grid-bootstrap-styles ui-grid="gridOptions" class="grid" ui-grid-single-filter></div>'
-  //   );
-  //   $compile(ele)(scope);
-  //   scope.$apply();
-  // }));
+  describe('Comprobamos el uso de la directiva ui-grid ', function () {
 
-  // describe('La directiva ui-grid ', function () {
-  //   scope.$apply(function(){
-  //     scope.getGridOptions = getGridOptions();
-  //   });
-  //
-  //   it('crea filas para cada elemento del data pasado en el gridOptions', function () {
-  //     debugger
-  //     console.log(ele.html());
-  //   });
-  //
-  // });
+    it('verificando el elemento del DOM sobre el que estamos trabajando', function () {
+      console.log(ele.text());
+      expect(ele.html()).not.toBe(null);
+    });
+
+  });
 
   //
-  //
-  // function getGridOptions() {
-  //   var gridOptions = {};
-  //
-  //   gridOptions = {
-  //     columnDefs:[
-  //       {field:"code"},
-  //       {field:"description"}
-  //     ],
-  //     data:[
-  //       {code:'1', description:'description 1'},
-  //       {code:'2', description:'description 2'},
-  //       {code:'3', description:'description 3'}
-  //     ]
-  //   };
-  //
-  //   return gridOptions;
-  // }
+
+  function getGridOptions() {
+    var gridOptions = {};
+
+    gridOptions = {
+      columnDefs:[
+        {field:"code"},
+        {field:"description"}
+      ],
+      data:[
+        {code:'1', description:'description 1'},
+        {code:'2', description:'description 2'},
+        {code:'3', description:'description 3'}
+      ]
+    };
+
+    return gridOptions;
+  }
 
 
 });
