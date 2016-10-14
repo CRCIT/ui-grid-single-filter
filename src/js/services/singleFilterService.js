@@ -37,6 +37,7 @@
           var concatedProperties = '';
 
           if (row.grid.columns) {
+            row.grid.preCompileCellTemplates();
             row.grid.columns.forEach(function (col, idx) {
               var cellValue = _getRenderedCellValue(row, col);
               concatedProperties = concatedProperties.concat(cellValue);
