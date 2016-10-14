@@ -119,7 +119,7 @@
 
       return {
         singleFilter:singleFilter,
-        getPropertyWithColumnDef:getPropertyWithColumnDef
+        getRenderedCellByColumnDef:getPropertyWithColumnDef
       };
 
 

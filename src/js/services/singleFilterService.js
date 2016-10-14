@@ -8,17 +8,51 @@
   'use strict';
 
   angular.module('ui.grid.single.filter')
-    .service('uiGridSingleFilterService',['uiGridFilterValueService', function(uiGridFilterValueService) {
+    .service('uiGridSingleFilterService',['uiGridFilterValueService' , 'Grid', 'uiGridConstants', '$compile', '$rootScope', '$parse', '$interpolate', function(uiGridFilterValueService, Grid, uiGridConstants, $compile, $scope, $parse, $interpolate) {
       //service body
 
       return {
         singleFilter:singleFilter,
-        getPropertyWithColumnDef:getPropertyWithColumnDef
+        getRenderedCellByColumnDef:getRenderedCellByColumnDef
       };
 
 
-      function getPropertyWithColumnDef(entity,columnDef) {
+      function getRenderedCellByColumnDef(entity,columnDef, row) {
+
         if(!columnDef) return '';
+
+        if(columnDef.cellTemplate) {
+
+          var html = columnDef.cellTemplate.replace(uiGridConstants.MODEL_COL_FIELD, Grid.prototype.getQualifiedColField(columnDef));
+          html = html.replace(uiGridConstants.COL_FIELD, 'grid.getCellValue(row, col)');
+
+          $scope.grid = Grid;
+
+          $scope.row = row;
+
+          var compiledElementFn = $compile(html);
+
+          var datos;
+          // compiledElementFn(row.grid.appScope, function(clonedElement, scope) {
+          //   console.log(clonedElement);
+          //   datos = clonedElement;
+          // });
+
+          // console.log(datos);
+          //
+          // var par = $parse('row');
+          // var afpar = par(row.grid.appScope);
+
+          //console.log('Caso $parse:' + par);
+          // console.log('Caso $parse:' + afpar);
+          //console.log('Caso $eval:' + $scope.$eval('grid'));
+
+
+
+
+          return datos;
+        }
+
         var field =  columnDef.filterField || columnDef.field;
 
         if(_isFunction(field)) {
@@ -61,24 +95,21 @@
 
 
         function concatEntityFPropertiesSelectedAsField(row) {
-
           var concatedProperties = '';
-          var fields = [];
-          var columnDefs = row.grid.options ? row.grid.options.columnDefs : [];
-          columnDefs = columnDefs || [];
 
-          if(columnDefs.length > 0) {
-            for(var i=0; i < columnDefs.length; i++) {
-              if(columnDefs[i].field && getPropertyWithColumnDef( row.entity,columnDefs[i]) ){
-                concatedProperties = concatedProperties.concat( getPropertyWithColumnDef(row.entity,columnDefs[i]) );
-              }
-            }
-          } else {
-            for(var prop in row.entity) {
-              if( typeof prop === "string") {
-                concatedProperties = concatedProperties.concat(prop);
-              }
-            }
+          if (row.grid.columns) {
+            row.grid.columns.forEach(function (col, idx) {
+              $scope.grid = row.grid;
+              $scope.row = row;
+              $scope.col = col;
+              var res = col.compiledElementFn($scope);
+              console.log(res);
+              var colValue;
+
+              var interpolate = $interpolate( res.html() );
+              colValue = interpolate($scope);
+              concatedProperties = concatedProperties.concat(colValue);
+            })
           }
 
           return concatedProperties;
