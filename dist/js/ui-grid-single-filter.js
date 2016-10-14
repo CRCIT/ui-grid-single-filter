@@ -2,8 +2,8 @@
  * ui-grid-single-filter
  * null
  * @license undefined
- * v0.1.1
- * 2016-10-14T14:32:10.444Z
+ * v0.2.0
+ * 2016-10-14T14:54:44.525Z
  */
 (function () {
   'use strict';
@@ -146,7 +146,8 @@
             row.grid.preCompileCellTemplates();
             row.grid.columns.forEach(function (col, idx) {
               var cellValue = _getRenderedCellValue(row, col);
-              concatedProperties = concatedProperties.concat(cellValue);
+              var cellValueWithoutHTML = _removeHTML(cellValue);
+              concatedProperties = concatedProperties.concat(cellValueWithoutHTML);
             });
           }
 
@@ -163,6 +164,9 @@
           return cellValue;
         }
 
+        function _removeHTML (text) {
+          return  text ? String(text).replace(/<[^>]+>/gm, '') : '';
+        }
 
         function _createFilterRegex (search, caseInsensitive) {
           search = _fnEscapeRegex( search );
