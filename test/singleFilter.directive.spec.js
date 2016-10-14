@@ -56,14 +56,22 @@ describe('SingleFilterService', function () {
 
   });
 
-  describe('Los filtrados de datos renderizados mendiante custom templates', function () {
+  describe('En el filtrado de celdas mendiante custom cell templates', function () {
 
-    it('El valor buscado se comparta con las celdas renderizadas', function () {
+    it('El valor se busca en las celdas renderizadas', function () {
       var input =  $(ele).find('#single-input').val("cell template");
       input.triggerHandler('keyup');
       $scope.$digest();
       var rows = $(ele).find('.ui-grid-row');
       expect(rows.length).toEqual(1);
+    });
+
+    it('El valor se busca en las celdas renderizadas eliminando los elementos HTML', function () {
+      var input =  $(ele).find('#single-input').val("pencil");
+      input.triggerHandler('keyup');
+      $scope.$digest();
+      var rows = $(ele).find('.ui-grid-row');
+      expect(rows.length).toEqual(0);
     });
 
   });
@@ -79,7 +87,7 @@ describe('SingleFilterService', function () {
       columnDefs:[
         {field:"code"},
         {field:"description"},
-        {field:'cellTemplateProperty', cellTemplate:'<div class="ui-grid-cell-contents" > cell {{grid.getCellValue(row, col)}} </div>' }
+        {field:'cellTemplateProperty', cellTemplate:'<div class="ui-grid-cell-contents" ><i class="fa fa-pencil"></i> cell {{grid.getCellValue(row, col)}} </div>' }
       ],
       data:[
         {code:'1', description:'description 1', cellTemplateProperty:'template'},

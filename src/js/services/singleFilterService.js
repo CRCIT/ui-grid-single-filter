@@ -40,7 +40,8 @@
             row.grid.preCompileCellTemplates();
             row.grid.columns.forEach(function (col, idx) {
               var cellValue = _getRenderedCellValue(row, col);
-              concatedProperties = concatedProperties.concat(cellValue);
+              var cellValueWithoutHTML = _removeHTML(cellValue);
+              concatedProperties = concatedProperties.concat(cellValueWithoutHTML);
             });
           }
 
@@ -57,6 +58,9 @@
           return cellValue;
         }
 
+        function _removeHTML (text) {
+          return  text ? String(text).replace(/<[^>]+>/gm, '') : '';
+        }
 
         function _createFilterRegex (search, caseInsensitive) {
           search = _fnEscapeRegex( search );
