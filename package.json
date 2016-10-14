@@ -1,8 +1,23 @@
 {
   "name": "ui-grid-single-filter",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Fast client filter for all properties in a single input.",
-  "private": true,
+  "homepage": "https://github.com/CRCIT/ui-grid-single-filter",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CRCIT/ui-grid-single-filter"
+  },
+  "author": {
+    "name": "Pablo Lopez",
+    "email": "plopez@crcit.es"
+  },
+  "contributors": [
+    {
+      "name": "Ruben Valero",
+      "email": "rvalero@crcit.es"
+    }
+  ],
   "engines": {
     "node": ">=0.12.0"
   },

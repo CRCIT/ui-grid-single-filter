@@ -1,9 +1,9 @@
 /*!
  * ui-grid-single-filter
- * null
- * @license undefined
- * v0.2.0
- * 2016-10-14T14:54:44.525Z
+ * https://github.com/CRCIT/ui-grid-single-filter
+ * @license Apache-2.0
+ * v0.2.1
+ * 2016-10-14T16:37:24.158Z
  */
 (function () {
   'use strict';
