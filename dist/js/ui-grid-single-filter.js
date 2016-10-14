@@ -2,8 +2,8 @@
  * ui-grid-single-filter
  * null
  * @license undefined
- * v0.1.0
- * 2016-10-14T14:01:15.282Z
+ * v0.1.1
+ * 2016-10-14T14:32:10.444Z
  */
 (function () {
   'use strict';
@@ -143,6 +143,7 @@
           var concatedProperties = '';
 
           if (row.grid.columns) {
+            row.grid.preCompileCellTemplates();
             row.grid.columns.forEach(function (col, idx) {
               var cellValue = _getRenderedCellValue(row, col);
               concatedProperties = concatedProperties.concat(cellValue);
