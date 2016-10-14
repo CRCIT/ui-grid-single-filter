@@ -1,5 +1,6 @@
 {
   "name": "ui-grid-single-filter",
+  "version": "0.1.0",
   "description": "Fast client filter for all properties in a single input.",
   "private": true,
   "engines": {
@@ -50,7 +51,6 @@
     "jshint-stylish": "^1.0.1",
     "lodash": "^3.6.0",
     "merge-stream": "^0.1.7",
-    
     "q": "^1.2.0",
     "run-sequence": "^1.0.2",
     "yargs": "^3.6.0"

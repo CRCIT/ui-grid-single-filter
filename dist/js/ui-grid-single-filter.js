@@ -2,8 +2,8 @@
  * ui-grid-single-filter
  * null
  * @license undefined
- * vundefined
- * 2016-09-29T10:37:31.617Z
+ * v0.1.0
+ * 2016-10-14T14:01:15.282Z
  */
 (function () {
   'use strict';
@@ -114,84 +114,56 @@
   'use strict';
 
   angular.module('ui.grid.single.filter')
-    .service('uiGridSingleFilterService',['uiGridFilterValueService', function(uiGridFilterValueService) {
+    .service('uiGridSingleFilterService',['uiGridFilterValueService' , 'Grid', 'uiGridConstants', '$compile', '$rootScope', '$parse', '$interpolate', function(uiGridFilterValueService, Grid, uiGridConstants, $compile, $scope, $parse, $interpolate) {
       //service body
 
       return {
-        singleFilter:singleFilter,
-        getPropertyWithColumnDef:getPropertyWithColumnDef
+        singleFilter:singleFilter
       };
-
-
-      function getPropertyWithColumnDef(entity,columnDef) {
-        if(!columnDef) return '';
-        var field =  columnDef.filterField || columnDef.field;
-
-        if(_isFunction(field)) {
-          return field(entity);
-        }
-
-        if(field.indexOf('.') < 0 ) return entity[field];
-
-        var property = entity;
-        var arrayOfLevels = field.split('.');
-
-        for( var i=0; i < arrayOfLevels.length ; i++ ) {
-          if(!property) return '';
-          property = property[arrayOfLevels[i]];
-        }
-
-        return property;
-
-        function _isFunction(functionToCheck) {
-          var getType = {};
-          return functionToCheck && getType.toString.call(functionToCheck) === '[object Function]';
-        }
-      }
 
       function singleFilter( renderableRows ) {
         if (!uiGridFilterValueService.filterValue) {
           return renderableRows;
         }
-        var matcher = createFilterRegex(uiGridFilterValueService.filterValue, true);
+
+        var matcher = _createFilterRegex(uiGridFilterValueService.filterValue, true);
+
         renderableRows.forEach( function( row ) {
-          var filterData = concatEntityFPropertiesSelectedAsField(row);
+          var filterData = _concatCellValues(row);
 
           var match = filterData.match(matcher);
-
           if ( !match ){
             row.visible = false;
           }
         });
+
         return renderableRows;
 
-
-        function concatEntityFPropertiesSelectedAsField(row) {
-
+        function _concatCellValues(row) {
           var concatedProperties = '';
-          var fields = [];
-          var columnDefs = row.grid.options ? row.grid.options.columnDefs : [];
-          columnDefs = columnDefs || [];
 
-          if(columnDefs.length > 0) {
-            for(var i=0; i < columnDefs.length; i++) {
-              if(columnDefs[i].field && getPropertyWithColumnDef( row.entity,columnDefs[i]) ){
-                concatedProperties = concatedProperties.concat( getPropertyWithColumnDef(row.entity,columnDefs[i]) );
-              }
-            }
-          } else {
-            for(var prop in row.entity) {
-              if( typeof prop === "string") {
-                concatedProperties = concatedProperties.concat(prop);
-              }
-            }
+          if (row.grid.columns) {
+            row.grid.columns.forEach(function (col, idx) {
+              var cellValue = _getRenderedCellValue(row, col);
+              concatedProperties = concatedProperties.concat(cellValue);
+            });
           }
 
           return concatedProperties;
         }
 
+        function _getRenderedCellValue(row, col) {
+          $scope.grid = row.grid;
+          $scope.row = row;
+          $scope.col = col;
 
-        function createFilterRegex (search, caseInsensitive) {
+          var cellTemplate = col.compiledElementFn($scope);
+          var cellValue = $interpolate(cellTemplate.html())($scope);
+          return cellValue;
+        }
+
+
+        function _createFilterRegex (search, caseInsensitive) {
           search = _fnEscapeRegex( search );
           var a = $.map( search.match( /"[^"]+"|[^ ]+/g ) || [''], function ( word ) {
             if ( word.charAt(0) === '"' ) {

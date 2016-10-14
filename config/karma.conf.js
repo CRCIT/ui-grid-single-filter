@@ -32,6 +32,7 @@ module.exports = function(config) {
     frameworks: ['jasmine'],
     files: [
       // Dependencies
+      'bower_components/jquery/dist/jquery.js',
       'bower_components/angular/angular.js',
       'bower_components/angular-mocks/angular-mocks.js',
       'bower_components/angular-ui-grid/ui-grid.js',
