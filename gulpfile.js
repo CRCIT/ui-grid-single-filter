@@ -315,8 +315,8 @@ gulp.task('publish', ['pre-publish'], function (cb) {
     // Use the tag argument as a tag, if it's not present use the current package version
     tag: argv.tag ? argv.tag : buildConfig.version,
     user: {
-      name: 'Brian Hann',
-      email: 'emailc0bra@gmail.com'
+      name: 'Pablo Lopez',
+      email: 'plopez@crcit.es'
     }
   };
 

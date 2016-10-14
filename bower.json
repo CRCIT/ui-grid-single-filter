@@ -2,6 +2,13 @@
   "name": "ui-grid-single-filter",
   "version": "0.2.0",
   "description": "Fast client filter for all properties in a single input.",
+  "homepage": "https://github.com/CRCIT/ui-grid-single-filter",
+  "license": "Apache-2.0",
+  "authors": [
+    "Pablo Lopez <plopez@crcit.es>",
+    "Ruben Valero <rvalero@crcit.es>",
+    "Gabriel Jimenez <gjimenez@crcit.es>"
+  ],
   "keywords": [
     "ui-grid",
     "plugin"
@@ -10,21 +17,21 @@
     "**/.*",
     "node_modules",
     "bower_components",
-    "test"
+    "config",
+    "docs",
+    "test",
+    "src",
+    "gulpfile.js",
+    "travis_build.sh"
   ],
   "main": "./dist/js/ui-grid-single-filter.js",
-  "private": true,
   "dependencies": {
-    "angular": "~1.3.x",
-    "angular-ui-grid": "~3.0.0-rc.20"
+    "angular": "~1.4.x",
+    "angular-ui-grid": "~3.0.x"
   },
   "devDependencies": {
-    "angular-bootstrap": "~0.12.1",
-    "angular-mocks": "~1.3.x",
-    "angular-route": "~1.3.x",
-    "bootstrap": "~3.3.4"
   },
   "resolutions": {
-    "angular": "~1.3.x"
+    "angular": "~1.4.x"
   }
 }
