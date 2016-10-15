@@ -2,8 +2,8 @@
  * ui-grid-single-filter
  * https://github.com/CRCIT/ui-grid-single-filter
  * @license Apache-2.0
- * v0.2.1
- * 2016-10-14T16:37:24.158Z
+ * v0.2.2
+ * 2016-10-15T21:50:11.310Z
  */
 (function () {
   'use strict';
@@ -114,7 +114,7 @@
   'use strict';
 
   angular.module('ui.grid.single.filter')
-    .service('uiGridSingleFilterService',['uiGridFilterValueService' , 'Grid', 'uiGridConstants', '$compile', '$rootScope', '$parse', '$interpolate', function(uiGridFilterValueService, Grid, uiGridConstants, $compile, $scope, $parse, $interpolate) {
+    .service('uiGridSingleFilterService',['uiGridFilterValueService' , 'Grid', 'uiGridConstants', 'gridUtil', '$compile', '$rootScope', '$parse', '$interpolate', function(uiGridFilterValueService, Grid, uiGridConstants, gridUtil, $compile, $scope, $parse, $interpolate) {
       //service body
 
       return {
@@ -143,11 +143,10 @@
           var concatedProperties = '';
 
           if (row.grid.columns) {
-            row.grid.preCompileCellTemplates();
             row.grid.columns.forEach(function (col, idx) {
               var cellValue = _getRenderedCellValue(row, col);
-              var cellValueWithoutHTML = _removeHTML(cellValue);
-              concatedProperties = concatedProperties.concat(cellValueWithoutHTML);
+              cellValue = _removeHTML(cellValue);
+              concatedProperties = concatedProperties.concat(cellValue);
             });
           }
 
@@ -159,7 +158,11 @@
           $scope.row = row;
           $scope.col = col;
 
-          var cellTemplate = col.compiledElementFn($scope);
+          var html = $scope.col.cellTemplate
+            .replace(uiGridConstants.MODEL_COL_FIELD, 'row.entity.' + gridUtil.preEval($scope.col.field))
+            .replace(uiGridConstants.COL_FIELD, 'grid.getCellValue(row, col)');
+
+          var cellTemplate = $compile(html)($scope);
           var cellValue = $interpolate(cellTemplate.html())($scope);
           return cellValue;
         }
