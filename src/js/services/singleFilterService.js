@@ -38,9 +38,13 @@
 
           if (row.grid.columns) {
             row.grid.columns.forEach(function (col, idx) {
-              var cellValue = _getRenderedCellValue(row, col);
-              cellValue = _removeHTML(cellValue);
-              concatedProperties = concatedProperties.concat(cellValue);
+
+              if (col.colDef && col.colDef.singleFilterSearchable !== false) {
+                var cellValue = _getRenderedCellValue(row, col);
+                cellValue = _removeHTML(cellValue);
+                concatedProperties = concatedProperties.concat(cellValue).concat('  ');
+              }
+
             });
           }
 
