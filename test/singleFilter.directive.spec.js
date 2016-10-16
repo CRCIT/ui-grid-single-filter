@@ -66,6 +66,14 @@ describe('SingleFilterService', function () {
       expect(rows.length).toEqual(0);
     });
 
+    it('Se añaden a la busqueda los datos de singleFilterAdditionalValue', function () {
+      var input =  $(ele).find('#single-input').val("Added 2");
+      input.triggerHandler('keyup');
+      $scope.$digest();
+      var rows = $(ele).find('.ui-grid-row');
+      expect(rows.length).toEqual(1);
+    });
+
   });
 
   describe('En el filtrado de celdas mendiante custom cell templates', function () {
@@ -98,7 +106,7 @@ describe('SingleFilterService', function () {
       onRegisterApi: function( gridApi ){ $scope.gridApi = gridApi; },
       columnDefs:[
         {field:"code"},
-        {field:"description"},
+        {field:"description", singleFilterAdditionalValue:"Added {{row.entity.code}}"},
         {field:"notSearchable", singleFilterSearchable: false},
         {field:'cellTemplateProperty', cellTemplate:'<div class="ui-grid-cell-contents" ><i class="fa fa-pencil"></i> cell {{grid.getCellValue(row, col)}} </div>' }
       ],
