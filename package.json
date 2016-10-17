@@ -1,6 +1,6 @@
 {
   "name": "ui-grid-single-filter",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "Fast client filter for all properties in a single input.",
   "homepage": "https://github.com/CRCIT/ui-grid-single-filter",
   "license": "Apache-2.0",
