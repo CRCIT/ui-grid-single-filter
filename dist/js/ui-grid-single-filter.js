@@ -2,8 +2,8 @@
  * ui-grid-single-filter
  * https://github.com/CRCIT/ui-grid-single-filter
  * @license Apache-2.0
- * v0.3.0
- * 2016-10-17T09:55:48.114Z
+ * v0.3.1
+ * 2016-10-17T15:20:08.979Z
  */
 (function () {
   'use strict';
@@ -13,13 +13,10 @@
    * @name ui.grid.single.filter
    * @description Main plugin module
    */
-  angular.module('ui.grid.single.filter', ['ui.grid']);
+  angular.module('ui.grid.single.filter', ['ui.grid', 'ui.grid.utils']);
 
 })();
 
-/**
- * Created by rvalero on 13/09/16.
- */
 (function () {
   'use strict';
 
@@ -50,9 +47,6 @@
 
 })();
 
-/**
- * Created by rvalero on 13/09/16.
- */
 (function () {
   'use strict';
 
@@ -80,9 +74,6 @@
 
 })();
 
-/**
- * Created by rvalero on 13/09/16.
- */
 (function () {
   'use strict';
 
@@ -104,17 +95,12 @@
 
 })();
 
-/**
- * Created by rvalero on 13/09/16.
- */
-/**
- * Created by rvalero on 13/09/16.
- */
 (function () {
   'use strict';
 
   angular.module('ui.grid.single.filter')
-    .service('uiGridSingleFilterService',['uiGridFilterValueService' , 'Grid', 'uiGridConstants', 'gridUtil', '$compile', '$rootScope', '$parse', '$interpolate', function(uiGridFilterValueService, Grid, uiGridConstants, gridUtil, $compile, $scope, $parse, $interpolate) {
+    .service('uiGridSingleFilterService',['uiGridFilterValueService', 'uiGridRenderService', 'uiGridCommonUtilsService',
+      function(uiGridFilterValueService, uiGridRenderService, uiGridCommonUtilsService) {
       //service body
 
       return {
@@ -143,7 +129,7 @@
           var concatedProperties = '';
 
           function addFilterProperty(renderedValue) {
-            renderedValue = _removeHTML(renderedValue);
+            renderedValue = uiGridCommonUtilsService.removeHtmlTags(renderedValue);
             concatedProperties = concatedProperties.concat(renderedValue).concat('  ');
           }
 
@@ -153,15 +139,15 @@
 
               if (!col.colDef || col.colDef.singleFilterSearchable !== false) {
                 if (col.colDef && col.colDef.singleFilterValue) {
-                  renderedValue = getRenderStringValue(row, col, (col.colDef.singleFilterValue));
+                  renderedValue = uiGridRenderService.getRenderStringValue(row, col, col.colDef.singleFilterValue);
                 }
                 else {
-                  renderedValue = getRenderedCellValue(row, col);
+                  renderedValue = uiGridRenderService.getRenderedCellValue(row, col);
                 }
                 addFilterProperty(renderedValue);
 
                 if (col.colDef && col.colDef.singleFilterAdditionalValue) {
-                  var additionalValue = getRenderStringValue(row, col, (col.colDef.singleFilterAdditionalValue));
+                  var additionalValue = uiGridRenderService.getRenderStringValue(row, col, col.colDef.singleFilterAdditionalValue);
                   addFilterProperty(additionalValue);
                 }
 
@@ -171,38 +157,6 @@
           }
 
           return concatedProperties;
-        }
-
-        function getRenderedCellValue(row, col) {
-          $scope.grid = row.grid;
-          $scope.row = row;
-          $scope.col = col;
-
-          var html = _replaceFieldWithExpression($scope, $scope.col.cellTemplate);
-          var cellTemplate = $compile(html)($scope);
-          var cellValue = $interpolate(cellTemplate.html())($scope);
-          return cellValue;
-        }
-
-        function getRenderStringValue(row, col, string) {
-          $scope.grid = row.grid;
-          $scope.row = row;
-          $scope.col = col;
-
-          var expressionString = _replaceFieldWithExpression($scope, string);
-          var renderedValue = $interpolate(expressionString)($scope);
-          return renderedValue;
-        }
-
-        function _replaceFieldWithExpression($scope, input) {
-          var replacedInput = input
-            .replace(uiGridConstants.MODEL_COL_FIELD, 'row.entity.' + gridUtil.preEval($scope.col.field))
-            .replace(uiGridConstants.COL_FIELD, 'grid.getCellValue(row, col)');
-          return replacedInput;
-        }
-
-        function _removeHTML (text) {
-          return  text ? String(text).replace(/<[^>]+>/gm, '') : '';
         }
 
         function _createFilterRegex (search, caseInsensitive) {
@@ -233,10 +187,5 @@
         }
       }
     }]);
-
-  /**
-   * @ngdoc factory
-   * @name ui
-   */
 
 })();
