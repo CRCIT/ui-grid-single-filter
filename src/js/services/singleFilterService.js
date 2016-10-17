@@ -36,18 +36,27 @@
         function _concatCellValues(row) {
           var concatedProperties = '';
 
+          function addFilterProperty(renderedValue) {
+            renderedValue = _removeHTML(renderedValue);
+            concatedProperties = concatedProperties.concat(renderedValue).concat('  ');
+          }
+
           if (row.grid.columns) {
             row.grid.columns.forEach(function (col, idx) {
+              var renderedValue;
 
               if (!col.colDef || col.colDef.singleFilterSearchable !== false) {
-                var cellValue = getRenderedCellValue(row, col);
-                cellValue = _removeHTML(cellValue);
-                concatedProperties = concatedProperties.concat(cellValue).concat('  ');
+                if (col.colDef && col.colDef.singleFilterValue) {
+                  renderedValue = getRenderStringValue(row, col, (col.colDef.singleFilterValue));
+                }
+                else {
+                  renderedValue = getRenderedCellValue(row, col);
+                }
+                addFilterProperty(renderedValue);
 
                 if (col.colDef && col.colDef.singleFilterAdditionalValue) {
-                  var additionalData = getRenderStringValue(row, col, (col.colDef.singleFilterAdditionalValue));
-                  additionalData = _removeHTML(additionalData);
-                  concatedProperties = concatedProperties.concat(additionalData).concat('  ');
+                  var additionalValue = getRenderStringValue(row, col, (col.colDef.singleFilterAdditionalValue));
+                  addFilterProperty(additionalValue);
                 }
 
               }
