@@ -36,6 +36,7 @@ module.exports = function(config) {
       'bower_components/angular/angular.js',
       'bower_components/angular-mocks/angular-mocks.js',
       'bower_components/angular-ui-grid/ui-grid.js',
+      'bower_components/ui-grid-utils/dist/js/ui-grid-utils.js',
       'src/js/plugin.module.js',
       'src/**/*.js',
       'src/**/*.js',
