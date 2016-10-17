@@ -2,8 +2,8 @@
  * ui-grid-single-filter
  * https://github.com/CRCIT/ui-grid-single-filter
  * @license Apache-2.0
- * v0.2.2
- * 2016-10-15T21:50:11.310Z
+ * v0.3.0
+ * 2016-10-17T09:55:48.114Z
  */
 (function () {
   'use strict';
@@ -142,29 +142,63 @@
         function _concatCellValues(row) {
           var concatedProperties = '';
 
+          function addFilterProperty(renderedValue) {
+            renderedValue = _removeHTML(renderedValue);
+            concatedProperties = concatedProperties.concat(renderedValue).concat('  ');
+          }
+
           if (row.grid.columns) {
             row.grid.columns.forEach(function (col, idx) {
-              var cellValue = _getRenderedCellValue(row, col);
-              cellValue = _removeHTML(cellValue);
-              concatedProperties = concatedProperties.concat(cellValue);
+              var renderedValue;
+
+              if (!col.colDef || col.colDef.singleFilterSearchable !== false) {
+                if (col.colDef && col.colDef.singleFilterValue) {
+                  renderedValue = getRenderStringValue(row, col, (col.colDef.singleFilterValue));
+                }
+                else {
+                  renderedValue = getRenderedCellValue(row, col);
+                }
+                addFilterProperty(renderedValue);
+
+                if (col.colDef && col.colDef.singleFilterAdditionalValue) {
+                  var additionalValue = getRenderStringValue(row, col, (col.colDef.singleFilterAdditionalValue));
+                  addFilterProperty(additionalValue);
+                }
+
+              }
+
             });
           }
 
           return concatedProperties;
         }
 
-        function _getRenderedCellValue(row, col) {
+        function getRenderedCellValue(row, col) {
           $scope.grid = row.grid;
           $scope.row = row;
           $scope.col = col;
 
-          var html = $scope.col.cellTemplate
-            .replace(uiGridConstants.MODEL_COL_FIELD, 'row.entity.' + gridUtil.preEval($scope.col.field))
-            .replace(uiGridConstants.COL_FIELD, 'grid.getCellValue(row, col)');
-
+          var html = _replaceFieldWithExpression($scope, $scope.col.cellTemplate);
           var cellTemplate = $compile(html)($scope);
           var cellValue = $interpolate(cellTemplate.html())($scope);
           return cellValue;
+        }
+
+        function getRenderStringValue(row, col, string) {
+          $scope.grid = row.grid;
+          $scope.row = row;
+          $scope.col = col;
+
+          var expressionString = _replaceFieldWithExpression($scope, string);
+          var renderedValue = $interpolate(expressionString)($scope);
+          return renderedValue;
+        }
+
+        function _replaceFieldWithExpression($scope, input) {
+          var replacedInput = input
+            .replace(uiGridConstants.MODEL_COL_FIELD, 'row.entity.' + gridUtil.preEval($scope.col.field))
+            .replace(uiGridConstants.COL_FIELD, 'grid.getCellValue(row, col)');
+          return replacedInput;
         }
 
         function _removeHTML (text) {
