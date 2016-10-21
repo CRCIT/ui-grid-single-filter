@@ -82,22 +82,22 @@ describe('SingleFilterService', function () {
       expect(rows.length).toEqual(1);
     });
 
-    describe('Se utiliza el valor field sin renderizar el cellTemplate cuando singleFilterRenderCellTemplate = false', function () {
+    describe('Se utiliza para filtrar el valor field por defecto salvo cuando singleFilterRenderCellTemplate = true que se filtra el cellTemplate renderizado', function () {
 
-      it('No encontramos resultados si buscamos por algo del cellTemplate', function () {
+      it('Encontramos resultados si buscamos por algo del cellTemplate', function () {
+        var input =  $(ele).find('#single-input').val("SIRender1");
+        input.triggerHandler('keyup');
+        $scope.$digest();
+        var rows = $(ele).find('.ui-grid-row');
+        expect(rows.length).toEqual(2);
+      });
+
+      it('No encontramos resultados si buscamos el valor del field', function () {
         var input =  $(ele).find('#single-input').val("NORender");
         input.triggerHandler('keyup');
         $scope.$digest();
         var rows = $(ele).find('.ui-grid-row');
         expect(rows.length).toEqual(0);
-      });
-
-      it('Encontramos resultados si buscamos el valor del field', function () {
-        var input =  $(ele).find('#single-input').val("Render1");
-        input.triggerHandler('keyup');
-        $scope.$digest();
-        var rows = $(ele).find('.ui-grid-row');
-        expect(rows.length).toEqual(2);
       });
 
     });
@@ -136,9 +136,10 @@ describe('SingleFilterService', function () {
         {field:"code"},
         {field:"code", singleFilterValue: "{{row.entity.code > 10 ? 'OVERPRICED' : 'OK'}}"},
         {field:"description", singleFilterAdditionalValue:"Added {{row.entity.code}}"},
-        {field:'noRender', singleFilterRenderCellTemplate: false, cellTemplate:'<div class="ui-grid-cell-contents" ><i class="fa fa-pencil"></i> NO{{grid.getCellValue(row, col)}} </div>' },
+        {field:'noRender', singleFilterRenderCellTemplate: true, cellTemplate:'<div class="ui-grid-cell-contents" ><i class="fa fa-pencil"></i> SI{{grid.getCellValue(row, col)}} </div>' },
+        {field:'noRender', cellTemplate:'<div class="ui-grid-cell-contents" ><i class="fa fa-pencil"></i> NO{{grid.getCellValue(row, col)}} </div>' },
         {field:"notSearchable", singleFilterSearchable: false},
-        {field:'cellTemplateProperty', cellTemplate:'<div class="ui-grid-cell-contents" ><i class="fa fa-pencil"></i> cell {{grid.getCellValue(row, col)}} </div>' }
+        {field:'cellTemplateProperty', singleFilterRenderCellTemplate: true, cellTemplate:'<div class="ui-grid-cell-contents" ><i class="fa fa-pencil"></i> cell {{grid.getCellValue(row, col)}} </div>' }
       ],
       data:[
         {code:'1', description:'description 1', noRender:'Render1', notSearchable:"NOT1", cellTemplateProperty:'template'},

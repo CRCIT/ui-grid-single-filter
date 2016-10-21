@@ -58,11 +58,11 @@
                   renderedValue = uiGridRenderService.getRenderStringValue(row, col, col.colDef.singleFilterValue);
                 }
                 else {
-                  if (col.colDef && col.colDef.singleFilterRenderCellTemplate === false) {
-                    renderedValue = eval(row.getQualifiedColField(col));
+                  if (col.colDef && col.colDef.singleFilterRenderCellTemplate === true) {
+                    renderedValue = uiGridRenderService.getRenderedCellValue(row, col);
                   }
                   else {
-                    renderedValue = uiGridRenderService.getRenderedCellValue(row, col);
+                    renderedValue = eval(row.getQualifiedColField(col));
                   }
                 }
                 addFilterProperty(renderedValue);
