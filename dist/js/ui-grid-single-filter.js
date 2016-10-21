@@ -2,8 +2,8 @@
  * ui-grid-single-filter
  * https://github.com/CRCIT/ui-grid-single-filter
  * @license Apache-2.0
- * v0.4.1
- * 2016-10-21T11:55:14.680Z
+ * v0.4.2
+ * 2016-10-21T12:22:37.587Z
  */
 (function () {
   'use strict';
@@ -159,7 +159,7 @@
                     renderedValue = uiGridRenderService.getRenderedCellValue(row, col);
                   }
                   else {
-                    renderedValue = eval(row.getQualifiedColField(col));
+                    renderedValue = row.grid.getCellDisplayValue(row, col);
                   }
                 }
                 addFilterProperty(renderedValue);
