@@ -104,7 +104,7 @@ describe('SingleFilterService', function () {
 
   });
 
-  describe('En el filtrado de celdas mendiante custom cell templates', function () {
+  describe('En el filtrado de celdas mediante custom cell templates', function () {
 
     it('El valor se busca en las celdas renderizadas', function () {
       var input =  $(ele).find('#single-input').val("cell template");
@@ -124,6 +124,18 @@ describe('SingleFilterService', function () {
 
   });
 
+  describe('En el filtrado se utilizan los filtros definidos en las celdas', function () {
+
+    it('Se filtra sobre el resultado el filtro number', function () {
+      var input =  $(ele).find('#single-input').val("1.00");
+      input.triggerHandler('keyup');
+      $scope.$digest();
+      var rows = $(ele).find('.ui-grid-row');
+      expect(rows.length).toEqual(1);
+    });
+
+  });
+
 
   //
 
@@ -133,8 +145,9 @@ describe('SingleFilterService', function () {
     gridOptions = {
       onRegisterApi: function( gridApi ){ $scope.gridApi = gridApi; },
       columnDefs:[
-        {field:"code"},
+        {field:"code", cellFilter:'number:\'2\''},
         {field:"code", singleFilterValue: "{{row.entity.code > 10 ? 'OVERPRICED' : 'OK'}}"},
+        {field:"complex.name"},
         {field:"description", singleFilterAdditionalValue:"Added {{row.entity.code}}"},
         {field:'noRender', singleFilterRenderCellTemplate: true, cellTemplate:'<div class="ui-grid-cell-contents" ><i class="fa fa-pencil"></i> SI{{grid.getCellValue(row, col)}} </div>' },
         {field:'noRender', cellTemplate:'<div class="ui-grid-cell-contents" ><i class="fa fa-pencil"></i> NO{{grid.getCellValue(row, col)}} </div>' },
@@ -142,9 +155,9 @@ describe('SingleFilterService', function () {
         {field:'cellTemplateProperty', singleFilterRenderCellTemplate: true, cellTemplate:'<div class="ui-grid-cell-contents" ><i class="fa fa-pencil"></i> cell {{grid.getCellValue(row, col)}} </div>' }
       ],
       data:[
-        {code:'1', description:'description 1', noRender:'Render1', notSearchable:"NOT1", cellTemplateProperty:'template'},
-        {code:'2', description:'description 2', noRender:'Render2', notSearchable:"NOT2", cellTemplateProperty:''},
-        {code:'3', description:'description 3', noRender:'Render3', notSearchable:"NOT3", cellTemplateProperty:''},
+        {code:'1', complex: {name: "name1"}, description:'description 1', noRender:'Render1', notSearchable:"NOT1", cellTemplateProperty:'template'},
+        {code:'2', complex: {name: "name2"}, description:'description 2', noRender:'Render2', notSearchable:"NOT2", cellTemplateProperty:''},
+        {code:'3', complex: null, description:'description 3', noRender:'Render3', notSearchable:"NOT3", cellTemplateProperty:''},
         {code:'13', description:'description 13', noRender:'Render13', notSearchable:"NOT13", cellTemplateProperty:''}
       ]
     };

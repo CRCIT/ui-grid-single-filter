@@ -62,7 +62,7 @@
                     renderedValue = uiGridRenderService.getRenderedCellValue(row, col);
                   }
                   else {
-                    renderedValue = eval(row.getQualifiedColField(col));
+                    renderedValue = row.grid.getCellDisplayValue(row, col);
                   }
                 }
                 addFilterProperty(renderedValue);
