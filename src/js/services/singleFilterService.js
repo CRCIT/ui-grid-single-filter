@@ -2,8 +2,8 @@
   'use strict';
 
   angular.module('ui.grid.single.filter')
-    .service('uiGridSingleFilterService',['uiGridFilterValueService', 'uiGridRenderService', 'uiGridCommonUtilsService',
-      function(uiGridFilterValueService, uiGridRenderService, uiGridCommonUtilsService) {
+    .service('uiGridSingleFilterService',['$log', 'uiGridFilterValueService', 'uiGridRenderService', 'uiGridCommonUtilsService',
+      function($log, uiGridFilterValueService, uiGridRenderService, uiGridCommonUtilsService) {
       //service body
 
       return {
@@ -17,8 +17,15 @@
 
         var matcher = _createFilterRegex(uiGridFilterValueService.filterValue, true);
 
+        var startTime = performance.now();
+        var filterData;
         renderableRows.forEach( function( row ) {
-          var filterData = _concatCellValues(row);
+          filterData = row.singleFilterRowFilterData;
+
+          if (!filterData) {
+            filterData = _concatCellValues(row);
+            row.singleFilterRowFilterData = filterData;
+          }
 
           var match = filterData.match(matcher);
           if ( !match ){
@@ -26,31 +33,42 @@
           }
         });
 
+        $log.debug(performance.now() - startTime);
+
+        filterData = null;
         return renderableRows;
 
         function _concatCellValues(row) {
-          var concatedProperties = '';
+          var cellValues = [];
 
           function addFilterProperty(renderedValue) {
             renderedValue = uiGridCommonUtilsService.removeHtmlTags(renderedValue);
-            concatedProperties = concatedProperties.concat(renderedValue).concat('  ');
+            cellValues.push(renderedValue);
           }
 
+          var renderedValue;
+          var additionalValue;
           if (row.grid.columns) {
             row.grid.columns.forEach(function (col, idx) {
-              var renderedValue;
+              renderedValue = null;
 
               if (!col.colDef || col.colDef.singleFilterSearchable !== false) {
+
                 if (col.colDef && col.colDef.singleFilterValue) {
                   renderedValue = uiGridRenderService.getRenderStringValue(row, col, col.colDef.singleFilterValue);
                 }
                 else {
-                  renderedValue = uiGridRenderService.getRenderedCellValue(row, col);
+                  if (col.colDef && col.colDef.singleFilterRenderCellTemplate === false) {
+                    renderedValue = eval(row.getQualifiedColField(col));
+                  }
+                  else {
+                    renderedValue = uiGridRenderService.getRenderedCellValue(row, col);
+                  }
                 }
                 addFilterProperty(renderedValue);
 
                 if (col.colDef && col.colDef.singleFilterAdditionalValue) {
-                  var additionalValue = uiGridRenderService.getRenderStringValue(row, col, col.colDef.singleFilterAdditionalValue);
+                  additionalValue = uiGridRenderService.getRenderStringValue(row, col, col.colDef.singleFilterAdditionalValue);
                   addFilterProperty(additionalValue);
                 }
 
@@ -59,7 +77,9 @@
             });
           }
 
-          return concatedProperties;
+          renderedValue = null;
+          additionalValue = null;
+          return cellValues.join('  ');
         }
 
         function _createFilterRegex (search, caseInsensitive) {
