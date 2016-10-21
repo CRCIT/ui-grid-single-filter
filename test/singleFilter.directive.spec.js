@@ -74,12 +74,32 @@ describe('SingleFilterService', function () {
       expect(rows.length).toEqual(1);
     });
 
-    it('Se añaden utiliza el valor de singleFilterValue en lugar del valor de la celda', function () {
+    it('Se utiliza el valor de singleFilterValue en lugar del valor de la celda', function () {
       var input =  $(ele).find('#single-input').val("OVERPRICED");
       input.triggerHandler('keyup');
       $scope.$digest();
       var rows = $(ele).find('.ui-grid-row');
       expect(rows.length).toEqual(1);
+    });
+
+    describe('Se utiliza el valor field sin renderizar el cellTemplate cuando singleFilterRenderCellTemplate = false', function () {
+
+      it('No encontramos resultados si buscamos por algo del cellTemplate', function () {
+        var input =  $(ele).find('#single-input').val("NORender");
+        input.triggerHandler('keyup');
+        $scope.$digest();
+        var rows = $(ele).find('.ui-grid-row');
+        expect(rows.length).toEqual(0);
+      });
+
+      it('Encontramos resultados si buscamos el valor del field', function () {
+        var input =  $(ele).find('#single-input').val("Render1");
+        input.triggerHandler('keyup');
+        $scope.$digest();
+        var rows = $(ele).find('.ui-grid-row');
+        expect(rows.length).toEqual(2);
+      });
+
     });
 
   });
@@ -116,14 +136,15 @@ describe('SingleFilterService', function () {
         {field:"code"},
         {field:"code", singleFilterValue: "{{row.entity.code > 10 ? 'OVERPRICED' : 'OK'}}"},
         {field:"description", singleFilterAdditionalValue:"Added {{row.entity.code}}"},
+        {field:'noRender', singleFilterRenderCellTemplate: false, cellTemplate:'<div class="ui-grid-cell-contents" ><i class="fa fa-pencil"></i> NO{{grid.getCellValue(row, col)}} </div>' },
         {field:"notSearchable", singleFilterSearchable: false},
         {field:'cellTemplateProperty', cellTemplate:'<div class="ui-grid-cell-contents" ><i class="fa fa-pencil"></i> cell {{grid.getCellValue(row, col)}} </div>' }
       ],
       data:[
-        {code:'1', description:'description 1', notSearchable:"NOT1", cellTemplateProperty:'template'},
-        {code:'2', description:'description 2', notSearchable:"NOT2", cellTemplateProperty:''},
-        {code:'3', description:'description 3', notSearchable:"NOT3", cellTemplateProperty:''},
-        {code:'13', description:'description 13', notSearchable:"NOT13", cellTemplateProperty:''}
+        {code:'1', description:'description 1', noRender:'Render1', notSearchable:"NOT1", cellTemplateProperty:'template'},
+        {code:'2', description:'description 2', noRender:'Render2', notSearchable:"NOT2", cellTemplateProperty:''},
+        {code:'3', description:'description 3', noRender:'Render3', notSearchable:"NOT3", cellTemplateProperty:''},
+        {code:'13', description:'description 13', noRender:'Render13', notSearchable:"NOT13", cellTemplateProperty:''}
       ]
     };
 

@@ -50,13 +50,20 @@
           var additionalValue;
           if (row.grid.columns) {
             row.grid.columns.forEach(function (col, idx) {
+              renderedValue = null;
 
               if (!col.colDef || col.colDef.singleFilterSearchable !== false) {
+
                 if (col.colDef && col.colDef.singleFilterValue) {
                   renderedValue = uiGridRenderService.getRenderStringValue(row, col, col.colDef.singleFilterValue);
                 }
                 else {
-                  renderedValue = uiGridRenderService.getRenderedCellValue(row, col);
+                  if (col.colDef && col.colDef.singleFilterRenderCellTemplate === false) {
+                    renderedValue = eval(row.getQualifiedColField(col));
+                  }
+                  else {
+                    renderedValue = uiGridRenderService.getRenderedCellValue(row, col);
+                  }
                 }
                 addFilterProperty(renderedValue);
 
