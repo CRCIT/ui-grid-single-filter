@@ -37,6 +37,7 @@ module.exports = function(config) {
       'bower_components/angular-mocks/angular-mocks.js',
       'bower_components/angular-ui-grid/ui-grid.js',
       'bower_components/ui-grid-utils/dist/js/ui-grid-utils.js',
+      'bower_components/angular-remove-diacritics/remove-diacritics.js',
       'src/js/plugin.module.js',
       'src/**/*.js',
       'src/**/*.js',

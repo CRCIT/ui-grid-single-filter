@@ -136,6 +136,24 @@ describe('SingleFilterService', function () {
 
   });
 
+  describe('Opciones de filtrado', function () {
+    it('Por defecto elimina los acentos de los resultados', function () {
+      var input =  $(ele).find('#single-input').val("lopez");
+      input.triggerHandler('keyup');
+      $scope.$digest();
+      var rows = $(ele).find('.ui-grid-row');
+      expect(rows.length).toEqual(1);
+    });
+
+    it('Por defecto elimina los acentos del criterio de busqueda', function () {
+      var input =  $(ele).find('#single-input').val("descriptión 2");
+      input.triggerHandler('keyup');
+      $scope.$digest();
+      var rows = $(ele).find('.ui-grid-row');
+      expect(rows.length).toEqual(1);
+    });
+  });
+
 
   //
 
@@ -158,7 +176,7 @@ describe('SingleFilterService', function () {
         {code:'1', complex: {name: "name1"}, description:'description 1', noRender:'Render1', notSearchable:"NOT1", cellTemplateProperty:'template'},
         {code:'2', complex: {name: "name2"}, description:'description 2', noRender:'Render2', notSearchable:"NOT2", cellTemplateProperty:''},
         {code:'3', complex: null, description:'description 3', noRender:'Render3', notSearchable:"NOT3", cellTemplateProperty:''},
-        {code:'13', description:'description 13', noRender:'Render13', notSearchable:"NOT13", cellTemplateProperty:''}
+        {code:'13', complex: {name: "López"}, description:'description 13', noRender:'Render13', notSearchable:"NOT13", cellTemplateProperty:''}
       ]
     };
 

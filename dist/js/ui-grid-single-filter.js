@@ -2,8 +2,8 @@
  * ui-grid-single-filter
  * https://github.com/CRCIT/ui-grid-single-filter
  * @license Apache-2.0
- * v0.4.2
- * 2016-10-21T12:22:37.587Z
+ * v0.5.0
+ * 2017-01-14T11:58:19.627Z
  */
 (function () {
   'use strict';
@@ -13,7 +13,7 @@
    * @name ui.grid.single.filter
    * @description Main plugin module
    */
-  angular.module('ui.grid.single.filter', ['ui.grid', 'ui.grid.utils']);
+  angular.module('ui.grid.single.filter', ['ui.grid', 'ui.grid.utils', 'txx.diacritics']);
 
 })();
 
@@ -99,28 +99,38 @@
   'use strict';
 
   angular.module('ui.grid.single.filter')
-    .service('uiGridSingleFilterService',['$log', 'uiGridFilterValueService', 'uiGridRenderService', 'uiGridCommonUtilsService',
-      function($log, uiGridFilterValueService, uiGridRenderService, uiGridCommonUtilsService) {
+    .service('uiGridSingleFilterService',['$log', 'uiGridFilterValueService', 'uiGridRenderService', 'uiGridCommonUtilsService', 'removeDiacritics',
+      function($log, uiGridFilterValueService, uiGridRenderService, uiGridCommonUtilsService, removeDiacritics) {
       //service body
+
+      var defaultOptions = {
+        caseInsensitive: true,
+        removeDiacritics: true
+      };
 
       return {
         singleFilter:singleFilter
       };
 
-      function singleFilter( renderableRows ) {
+      function singleFilter( renderableRows, options ) {
+
+        var settings = angular.extend({}, defaultOptions, options);
+
         if (!uiGridFilterValueService.filterValue) {
           return renderableRows;
         }
 
-        var matcher = _createFilterRegex(uiGridFilterValueService.filterValue, true);
+        var filterValue = uiGridFilterValueService.filterValue;
+        filterValue = settings.removeDiacritics ? removeDiacritics.replace(filterValue) : filterValue;
+        var matcher = _createFilterRegex(filterValue, settings.caseInsensitive);
 
-        var startTime = performance.now();
         var filterData;
         renderableRows.forEach( function( row ) {
           filterData = row.singleFilterRowFilterData;
 
           if (!filterData) {
             filterData = _concatCellValues(row);
+            filterData = settings.removeDiacritics ? removeDiacritics.replace(filterData) : filterData;
             row.singleFilterRowFilterData = filterData;
           }
 
@@ -129,8 +139,6 @@
             row.visible = false;
           }
         });
-
-        $log.debug(performance.now() - startTime);
 
         filterData = null;
         return renderableRows;
